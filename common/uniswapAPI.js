@@ -14,20 +14,20 @@ web3 = new Web3('https://mainnet.infura.io/v3/bcbf9007077d4354b6b255863e015800')
 async function getBuyTokenAddress(txhash) {
     return new Promise((resolve, reject) => {
         web3.eth.getTransaction(txhash).then((tx) => {
-            console.log('tx input data: ', tx.input)
+            //console.log('tx input data: ', tx.input)
             const encodeinutData = tx.input
             
             const decoder = new InputDataDecoder(EXCHANGE_ABI);
             const decodeABI = decoder.decodeData(encodeinutData);
             // console.log('decodeABI:', decodeABI)
             method = decodeABI.method
-            console.log(method)
+            //console.log(method)
             if (method == 'swapExactETHForTokens'){
                 var buyTokenAddress = decodeABI.inputs[1][1]
                 // console.log('buyTokenAddress: ', buyTokenAddress)
                 resolve({"type": "swapExactETHForTokens", "tokenAddr": buyTokenAddress })
             }else if(method == 'swapExactTokensForTokens'){
-                console.log(`交易类型： ${decodeABI.inputs}`)
+                //console.log(`交易类型： ${decodeABI.inputs}`)
                 resolve(undefined)
                 return
             }
@@ -52,7 +52,7 @@ const provider = new ethers.providers.InfuraProvider('homestead', {
   });
 
 async function fetchTokenData(tokenaddr){
-    console.log(`fetch ${web3.utils.toChecksumAddress(tokenaddr)} token data.....`)
+    //console.log(`fetch ${web3.utils.toChecksumAddress(tokenaddr)} token data.....`)
     const token = await Fetcher.fetchTokenData(ChainId.MAINNET, web3.utils.toChecksumAddress(tokenaddr), provider)
     // console.log(token)
 }

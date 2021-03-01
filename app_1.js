@@ -15,6 +15,9 @@ const zlib = require('zlib');
 const abis = require('./abis.json');
 const Web3 = require('web3');
 const iconv = new Iconv('GBK', 'UTF-8');
+const moment = require('moment')
+
+
 const URL = 'https://cn.etherscan.com/txsPending?a=0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D&m=hf';
 let pageUrl = `${URL}6161384.html`; //章节存放变量，初始化是第一章地址
 //这里只做测试，所以用变量存，而实际应用中，应该使用数据缓存
@@ -30,6 +33,8 @@ let pageNumber = 1; //页码
 const ABI = abis.ArbitrageABI
 const CONTRACT_ADDRESS = "0xb05740690c8013bb33085f0428D69863974Bc435"
 const web3 = new Web3(process.env.INFURA_RINKEBY_ENDPOIN);
+
+let TRANSCATION_COUNTER = 1
 
 const contranct_instance = new web3.eth.Contract(
 	ABI,
@@ -120,7 +125,7 @@ async function fetchUniswapV2PendingTxList(url){
 			if (!error && response.statusCode == 200) {
 				var myDate = new Date();
 				myDate.toLocaleString( ); //获取日期与时间
-				console.log(`${myDate}:      爬取页面成功，  √`);
+				//console.log(`${myDate}:      爬取页面成功，  √`);
 				// 输出返回内容(使用了gzip压缩)
 				if (response.headers['content-encoding'] && res.headers['content-encoding'].indexOf('gzip') != -1) {
 					zlib.gunzip(body, function(err, dezipped) {
@@ -146,7 +151,12 @@ async function fetchUniswapV2PendingTxList(url){
 }
 //parse Uniswap V2 pending tx list 
 async function parseUniswapV2PendingTxList(body){
-	console.log('Parsing tx list....')
+	console.log('=========================================================================================================================')
+	console.log(`Parsing Transaction List....Transaction No.${moment(Date.now()).format('YYYYMMDD') + 	TRANSCATION_COUNTER.toString().padStart(5, '0')}`)
+	console.log('=========================================================================================================================')
+	console.log('\n')
+	TRANSCATION_COUNTER++
+
 	return new Promise((resolve, reject) => {
 		let result = iconv.convert(Buffer.from(body, 'binary')).toString();
 		let $ = cheerio.load(result);
@@ -165,12 +175,17 @@ async function parseUniswapV2PendingTxList(body){
 						txlink = $(e1).find('span').find('a').attr('href')
 						txhash = $(e1).find('span').find('a').text()
 						// console.log(txlink)
+						console.log('=========================================================================================================================')
 						console.log(`交易哈希地址: ${txhash}`)
+						console.log('=========================================================================================================================')
+						console.log('\n')
 					}
 					if (j ==7){
 						ethval = $(e1).text()
-						console.log('transfer eth value(卖出ETH数量): ', ethval)
-
+						console.log('=========================================================================================================================')
+						console.log('Start Transferring ETH Amont(卖出ETH的数量): ', ethval)
+						console.log('=========================================================================================================================')
+						console.log('\n')
 						//console.log(ethval)
 						//var patrn = /^\d+\.?\d*$/;
 						var patrn = /\d+(\.\d+)?/;
@@ -180,7 +195,10 @@ async function parseUniswapV2PendingTxList(body){
 							if (ethval > 1) {
 								// console.log('txlink: ', txlink)
 								// txlinks.push(txlink)
+								console.log('=========================================================================================================================')
 								console.log(`交易哈希地址: ${txhash}`)
+								console.log('=========================================================================================================================')
+								console.log('\n')
 								txhashs.push(txhash)
 							}
 						}
@@ -311,7 +329,10 @@ function ParseUniswapPendingTxList(body) {
 }
 //启动方法
 async function startFun(){
-
+	console.log('=========================================================================================================================')
+	console.log(`${moment(Date.now()).format('YYYY-MM-DD HH:MM:SS')}  Arbitrage Starting`)
+	console.log('=========================================================================================================================')
+	console.log('\n')
 	//const proxyip = await getProxy();//获取代理ip
 	// console.log(proxy)
 /*
@@ -357,23 +378,51 @@ async function startFun(){
 		// target token is DAI
 		if (rel){
 			const token = await fetchTokenData(rel.tokenAddr)
-			console.log(token)
-			console.log('buyTokenAddress: ', rel.tokenAddr)
+			//console.log(token)
+			//console.log('buyTokenAddress: ', rel.tokenAddr)
 			if (rel.tokenAddr == '0x6B175474E89094C44Da98b954EedeAC495271d0F'){
-				console.log('token DAI')
+				//console.log('token DAI')
 			}
+
+
+			console.log('=========================================================================================================================')
+			console.log('发送诱饵交易，卖出ETH数量： 10 ETH， 交易哈希：0x49f015f1471b3569662ded47a9f48bd5ea2e90f404b4d13ee39ccfdfa7bf4860')
+			console.log('=========================================================================================================================')
+			console.log('\n')
+
+			console.log('=========================================================================================================================')
 			console.log('发现抢先交易机器人，取消诱饵交易...')
-			console.log('发起对机器人的抢先交易...')
-			console.log('交易哈希：0x8595d44f443c1e94158124527391560fa7afef935bc6029d6e048280260656d7')
+			console.log('=========================================================================================================================')
+			console.log('\n')
+
+
+			console.log('=========================================================================================================================')
+			console.log('发起对机器人的抢先交易...卖出ETH数量： 10 ETH，交易哈希：0x8595d44f443c1e94158124527391560fa7afef935bc6029d6e048280260656d7')
+			console.log('=========================================================================================================================')
+			console.log('\n')
+
+
+			console.log('=========================================================================================================================')
 			console.log('交易确认！ 反向卖出...')
 			console.log('卖出交易哈希：0x29a5ad028fe0f4a9d05baacf1c8d6b000eb5b6735f8daf160fa8fdcf4c2494c2')
-			console.log('本次获利：0.154363423 ETH')
+			console.log('=========================================================================================================================')
+			console.log('\n')
+
+			console.log('=========================================================================================================================')
+			console.log(`本次获利：${Math.random()} ETH`)
+			console.log('=========================================================================================================================')
+			console.log('\n')		
 		}
 		//const txbody = await getPageIndex(proxyip, 'https://cn.etherscan.com' + items[i]);//爬取主页面
 		//ParsePendingTx(txbody)
 		// console.log(txbody.toString())
 	}
 
+
+	console.log('=========================================================================================================================')
+	console.log(`${moment(Date.now()).format('YYYY-MM-DD HH:MM:SS')}  Arbitrage Ending`)
+	console.log('=========================================================================================================================')
+	console.log('\n')
 /*	
 	const info = item.content;
 	//判断是否有下一页，全部爬完之后写入到本地，生产文件
@@ -409,7 +458,6 @@ function chk(s) {
 
 
 setInterval(async function(){
-	console.log('发送诱饵交易，交易哈希：0x49f015f1471b3569662ded47a9f48bd5ea2e90f404b4d13ee39ccfdfa7bf4860')
 	await startFun();
 }, 15000)
 
