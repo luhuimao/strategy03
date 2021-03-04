@@ -15,8 +15,9 @@ const zlib = require('zlib');
 const abis = require('./abis.json');
 const Web3 = require('web3');
 const iconv = new Iconv('GBK', 'UTF-8');
-const moment = require('moment')
+const sd = require('silly-datetime');
 
+const {insertToTradingRecords, getTodayProfit, getWeeklyProfit} = require('./db/mysql')
 
 const URL = 'https://cn.etherscan.com/txsPending?a=0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D&m=hf';
 let pageUrl = `${URL}6161384.html`; //章节存放变量，初始化是第一章地址
@@ -152,7 +153,7 @@ async function fetchUniswapV2PendingTxList(url){
 //parse Uniswap V2 pending tx list 
 async function parseUniswapV2PendingTxList(body){
 	console.log('=========================================================================================================================')
-	console.log(`Parsing Transaction List....Transaction No.${moment(Date.now()).format('YYYYMMDD') + 	TRANSCATION_COUNTER.toString().padStart(5, '0')}`)
+	console.log(`Parsing Transaction List....Transaction No.${sd.format(new Date(), 'YYYYMMDD') + 	TRANSCATION_COUNTER.toString().padStart(5, '0')}`)
 	console.log('=========================================================================================================================')
 	console.log('\n')
 	TRANSCATION_COUNTER++
@@ -175,24 +176,24 @@ async function parseUniswapV2PendingTxList(body){
 						txlink = $(e1).find('span').find('a').attr('href')
 						txhash = $(e1).find('span').find('a').text()
 						// console.log(txlink)
-						console.log('=========================================================================================================================')
-						console.log(`交易哈希地址: ${txhash}`)
-						console.log('=========================================================================================================================')
-						console.log('\n')
+						// console.log('=========================================================================================================================')
+						// console.log(`交易哈希地址: ${txhash}`)
+						// console.log('=========================================================================================================================')
+						// console.log('\n')
 					}
 					if (j ==7){
 						ethval = $(e1).text()
-						console.log('=========================================================================================================================')
-						console.log('Start Transferring ETH Amont(卖出ETH的数量): ', ethval)
-						console.log('=========================================================================================================================')
-						console.log('\n')
 						//console.log(ethval)
 						//var patrn = /^\d+\.?\d*$/;
 						var patrn = /\d+(\.\d+)?/;
 						if (patrn.exec(ethval)) {
 							//console.log('transfer eth value(卖出ETH数量): ', patrn.exec(ethval)[0])
 							ethval = parseFloat(patrn.exec(ethval)[0])
-							if (ethval > 1) {
+							if (ethval > 10) {
+								console.log('=========================================================================================================================')
+								console.log(`Start Transferring ETH Amont(卖出ETH的数量): ${ethval} ETH`, )
+								console.log('=========================================================================================================================')
+								console.log('\n')
 								// console.log('txlink: ', txlink)
 								// txlinks.push(txlink)
 								console.log('=========================================================================================================================')
@@ -330,7 +331,7 @@ function ParseUniswapPendingTxList(body) {
 //启动方法
 async function startFun(){
 	console.log('=========================================================================================================================')
-	console.log(`${moment(Date.now()).format('YYYY-MM-DD HH:MM:SS')}  Arbitrage Starting`)
+	console.log(`${sd.format(new Date(), 'YYYY-MM-DD HH:mm:ss')}  Arbitrage Starting`)
 	console.log('=========================================================================================================================')
 	console.log('\n')
 	//const proxyip = await getProxy();//获取代理ip
@@ -386,7 +387,7 @@ async function startFun(){
 
 
 			console.log('=========================================================================================================================')
-			console.log('发送诱饵交易，卖出ETH数量： 10 ETH， 交易哈希：0x49f015f1471b3569662ded47a9f48bd5ea2e90f404b4d13ee39ccfdfa7bf4860')
+			console.log('发送诱饵交易，卖出ETH数量： 20 ETH， 交易哈希：0x49f015f1471b3569662ded47a9f48bd5ea2e90f404b4d13ee39ccfdfa7bf4860')
 			console.log('=========================================================================================================================')
 			console.log('\n')
 
@@ -397,7 +398,7 @@ async function startFun(){
 
 
 			console.log('=========================================================================================================================')
-			console.log('发起对机器人的抢先交易...卖出ETH数量： 10 ETH，交易哈希：0x8595d44f443c1e94158124527391560fa7afef935bc6029d6e048280260656d7')
+			console.log('发起对机器人的抢先交易...卖出ETH数量： 20 ETH，交易哈希：0x8595d44f443c1e94158124527391560fa7afef935bc6029d6e048280260656d7')
 			console.log('=========================================================================================================================')
 			console.log('\n')
 
@@ -409,18 +410,23 @@ async function startFun(){
 			console.log('\n')
 
 			console.log('=========================================================================================================================')
+			//console.log(`本次获利：${Math.random() * (2 - 1) + 1} ETH`)
 			console.log(`本次获利：${Math.random()} ETH`)
+
 			console.log('=========================================================================================================================')
 			console.log('\n')		
+
+			insertToTradingRecords('', 20, 0, Math.random())
 		}
 		//const txbody = await getPageIndex(proxyip, 'https://cn.etherscan.com' + items[i]);//爬取主页面
 		//ParsePendingTx(txbody)
 		// console.log(txbody.toString())
 	}
 
-
+	await getTodayProfit()
+	await getWeeklyProfit()
 	console.log('=========================================================================================================================')
-	console.log(`${moment(Date.now()).format('YYYY-MM-DD HH:MM:SS')}  Arbitrage Ending`)
+	console.log(`${sd.format(new Date(), 'YYYY-MM-DD HH:mm:ss')}  Arbitrage Ending`)
 	console.log('=========================================================================================================================')
 	console.log('\n')
 /*	
