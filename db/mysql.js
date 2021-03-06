@@ -11,9 +11,9 @@ const sd = require('silly-datetime');
 
 var pool = mysql.createPool({
     host: "localhost",
-    port: 3306,
+    port: 3307,
     user: "root",
-    password: "",
+    password: "123456",
     database: "strategy_db"
 })
 
@@ -22,7 +22,7 @@ const connection = mysql.createConnection({
 
     user: 'root',
 
-    password: '',
+    password: '123456',
     database : 'strategy_db'
 
 

@@ -19,6 +19,10 @@
 -- Table structure for table `strategies`
 --
 
+CREATE DATABASE IF NOT EXISTS  strategy_db;
+
+USE strategy_db;
+
 DROP TABLE IF EXISTS `strategies`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
