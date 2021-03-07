@@ -5,7 +5,7 @@ const CONTRACT_ADDRESS = "0xb05740690c8013bb33085f0428D69863974Bc435"
 
 const RINKEBY_PROVIDER = new Web3.providers.HttpProvider(process.env.INFURA_RINKEBY_ENDPOINT)
 const MAINNET_PROVIDER = new Web3.providers.HttpProvider(process.env.INFURA_MAINNET_ENDPOINT)
-const web3 = new Web3(RINKEBY_PROVIDER)
+const web3 = new Web3(MAINNET_PROVIDER)
 
 const contranct_instance = new web3.eth.Contract(
 	ABI,
@@ -241,7 +241,7 @@ async function swapEthToToken(token_address, eth_amount) {
             DEADLINE
         )    
     
-        const tx_nonce = await web3.eth.getTransactionCount(FROM_ADDR)
+        //const tx_nonce = await web3.eth.getTransactionCount(FROM_ADDR)
         //console.log('tx count: ', tx_nonce)
         gasprice = await web3.eth.getGasPrice()
         console.log('=========================================================================================================================')
@@ -249,7 +249,7 @@ async function swapEthToToken(token_address, eth_amount) {
         console.log('=========================================================================================================================')
         console.log('\n')
         const txData = {
-          nonce: web3.utils.toHex(tx_nonce),
+          //nonce: web3.utils.toHex(tx_nonce),
           gasLimit: web3.utils.toHex(600000),
           gasPrice: web3.utils.toHex(web3.utils.toBN(gasprice).div(web3.utils.toBN('10')).add(web3.utils.toBN(gasprice)).toString()), // 110% gas_price
           to: UNISWAP_V2_EXCHANGE_ADDRESS,
@@ -297,7 +297,7 @@ exports.swapEthToToken = swapEthToToken;
 
 async function swapTokenToEth(DEST_TOKEN_ADDR) {
     try {       
-        const pairArray = [DEST_TOKEN_ADDR, RINKEBY_WETH_ADDRESS]
+        const pairArray = [DEST_TOKEN_ADDR, MAINNET_WETH_ADDRESS]
         //const ERC20_CONTRACT = new web3.eth.Contract(OMG_ABI, DEST_TOKEN_ADDR);
         const ERC20_CONTRACT = new web3.eth.Contract(ERC20_ABI, DEST_TOKEN_ADDR);
 
@@ -342,11 +342,11 @@ async function swapTokenToEth(DEST_TOKEN_ADDR) {
             DEADLINE
         ).encodeABI()    
     
-        const tx_nonce = await web3.eth.getTransactionCount(FROM_ADDR)
+        //const tx_nonce = await web3.eth.getTransactionCount(FROM_ADDR)
         //console.log('tx count: ', tx_nonce)
     
         txData = {
-          nonce: web3.utils.toHex(tx_nonce),
+          //nonce: web3.utils.toHex(tx_nonce),
           gasLimit: web3.utils.toHex(600000),
           // gasPrice: web3.utils.toHex(web3.utils.toWei('1', 'Gwei')), // 10 Gwei
           to: UNISWAP_V2_EXCHANGE_ADDRESS,
