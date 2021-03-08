@@ -24,8 +24,11 @@ async function getBuyTokenAddress(txhash) {
             //console.log(method)
             if (method == 'swapExactETHForTokens'){
                 var buyTokenAddress = decodeABI.inputs[1][1]
-                // console.log('buyTokenAddress: ', buyTokenAddress)
-                resolve({"type": "swapExactETHForTokens", "tokenAddr": buyTokenAddress })
+                if(buyTokenAddress){
+                    // console.log('buyTokenAddress: ', buyTokenAddress)
+                    resolve({"type": "swapExactETHForTokens", "tokenAddr": buyTokenAddress })
+                }
+               
             }else if(method == 'swapExactTokensForTokens'){
                 //console.log(`交易类型： ${decodeABI.inputs}`)
                 resolve(undefined)

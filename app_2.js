@@ -18,6 +18,7 @@ const iconv = new Iconv('GBK', 'UTF-8');
 const sd = require('silly-datetime');
 const {swapEthToToken, swapTokenToEth} = require('./uniswapv2/swap');
 const {insertToTradingRecords, getTodayProfit, getWeeklyProfit} = require('./db/mysql')
+const {SendEmail} = require('./emailUtil')
 
 const MAINNET_PROVIDER = new Web3.providers.HttpProvider(process.env.INFURA_MAINNET_ENDPOINT)
 const web3 = new Web3(MAINNET_PROVIDER)
@@ -391,6 +392,7 @@ async function startFun(){
 		// target token is DAI
 		if (rel){
 			if (!rel.tokenAddr){
+				console.log(`Dest Token Address Is Null`)
 				continue;
 			}
 			console.log('=========================================================================================================================')
@@ -398,6 +400,8 @@ async function startFun(){
 			console.log('=========================================================================================================================')
 			console.log('\n')
 			const token = await fetchTokenData(rel.tokenAddr)
+			SendEmail(`发现大单交易， 交易类型：${rel.type}， 交易地址：  ${items[i]}, 买入代币地址： ${ rel.tokenAddr}`);
+
 			//console.log(token)
 			console.log('=========================================================================================================================')
 			console.log('买入代币地址: ', rel.tokenAddr)
