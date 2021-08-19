@@ -19,7 +19,7 @@ const SETTINGS = {
     gasPrice: web3.utils.toWei('50', 'Gwei'),
     from: '0x44dDd4501eE8c55AAF80658E50a67Ac4ae8Faa79', // Use your account here
     value: web3.utils.toWei('1', 'Ether'), // Amount of Ether to Swap
-    privKey: '92cb180d402b4b95807e91392f2fac9c73fb30a98445169381af7bc2486da0e8'
+    privKey: ''
 }
 
 function checkTokenSymbol(token_symbol){

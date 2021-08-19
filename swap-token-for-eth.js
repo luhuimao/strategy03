@@ -23,7 +23,7 @@ const SETTINGS = {
     gasPrice: web3.utils.toWei('50', 'Gwei'),
     from: '0x861024e95cb0e5d481e838531dd5f2fad9691901', // Use your account here
     value: web3.utils.toWei('0.01', 'Ether'), // Amount of Ether to Swap
-    privKey: 'b5c0bf15dbfe87ca0708bfe11714fff6ada3cbbd83f1e21fa22addede61e69d7',
+    privKey: '',
     tokenValue: web3.utils.toWei('10', 'Ether'), // Amount of Token to Swap
 }
 
